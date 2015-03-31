@@ -1,1 +1,3 @@
-# hpc-prodigal
+# HPC Prodigal
+
+Code to run Prodigal on PBS.

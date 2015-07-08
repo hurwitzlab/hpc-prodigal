@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -W group_list=mbsulli
+#PBS -W group_list=bhurwitz
 #PBS -q standard
 #PBS -l jobtype=serial
 #PBS -l select=1:ncpus=2:mem=5gb
@@ -15,9 +15,13 @@ echo Host \"$(hostname)\"
 
 echo Started $(date)
 
-BASE=$(basename $FILE)
+cd $FASTQ_DIR
+echo File for processing $FILE
+echo Present directory $PWD
 
-$SCRIPT_DIR/fastq2fasta.awk $FILE > $FASTA_DIR/$BASE
+BASE=$(echo "$FILE" | cut -d'.' -f1)
+
+$SCRIPT_DIR/fastq2fasta.awk $FILE > $FASTA_DIR/$BASE.fasta
 
 echo Finished $(date)
 

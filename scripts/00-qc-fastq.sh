@@ -23,27 +23,28 @@ PROG=$(basename $0 ".sh")
 STDERR_DIR="$CWD/err/$PROG"
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dirs "$STDERR_DIR" "$STDOUT_DIR" 
+init_dir "$STDERR_DIR" "$STDOUT_DIR" 
 
 if [[ ! -d $FASTA_DIR ]]; then
     mkdir -p $FASTA_DIR
 fi
 
-#
-# NB: send the "R1" file and use the name to get the "R2" 
-# file (if it exists)
-#
+cd $FASTQ_DIR
+
 FILES=$(mktemp)
 
-find $FASTQ_DIR -name \*.fastq > $FILES
+find $FASTQ_DIR -name \*.fastq | cut -d'/' -f8 > $FILES
 
 i=0
 while read FILE; do
     let i++
 
     export FILE
+    echo $FILE
+    echo $PWD
+    BASENAME=$(echo "$FILE" | cut -d'.' -f1)    
 
-    JOB=$(qsub -v SCRIPT_DIR,FILE,FASTA_DIR -N qc_fastq -e "$STDERR_DIR/$FILE" -o "$STDOUT_DIR/$FILE" $SCRIPT_DIR/qc_fastq.sh)
+    JOB=$(qsub -v SCRIPT_DIR,FILE,FASTQ_DIR,FASTA_DIR -N qc_fastq -e "$STDERR_DIR/$BASENAME" -o "$STDOUT_DIR/$BASENAME" $SCRIPT_DIR/qc_fastq.sh)
 
     printf '%5d: %15s %-30s\n' $i $JOB $(basename $FILE)
 done < $FILES

@@ -1,62 +1,23 @@
-#!/bin/bash
-
-# --------------------------------------------------
-#
-# config.sh
-# 
-# Edit this file to match your directory structure
-#
-# --------------------------------------------------
-
-#
-# Some constants
-#
-export MER_SIZE=20
-export QSTAT="/usr/local/bin/qstat_local"
-export GUNZIP="/bin/gunzip"
-
-#
-# The main checkout
-#
-PROJECT_DIR="/rsgrps/bhurwitz/ajacob/prodigal/"
-
-#
-# Where we can find the worker scripts
-#
-export SCRIPT_DIR="$PROJECT_DIR/scripts/workers"
-
-#
-# Where to put all our generated data
-#
-export DATA_DIR="$PROJECT_DIR/data"
-
-# 
-# Where we can find all our custom binaries (e.g., jellyfish)
-# 
+export CWD=$PWD
 export BIN_DIR="/rsgrps/bhurwitz/hurwitzlab/bin"
+export FASTQ_DIR="/rsgrps/bhurwitz/ajacob/prodigal/data/fastq"
+#export FASTA_DIR="/rsgrps/bhurwitz/ajacob/prodigal/data/fasta"
+export FASTA_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/mouse_data"
+#export SPLIT_FA_DIR="/rsgrps/bhurwitz/ajacob/prodigal/data/fasta"
+#export SPLIT_FA_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/mouse_data"
+export SPLIT_FA_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/fasta-split"
+export PRODIGAL_OUT_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/prodigal-out"
+export CDHIT2D_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/cdhit2d-dir"
+export CDHIT_DIR="/rsgrps/bhurwitz/ajacob/hpc-prodigal/cdhit-dir"
+export SCRIPT_DIR="$CWD/workers"
+export FA_SPLIT_FILE_SIZE=150000000 # in KB
+#export PRODIGAL_CONF_FILE="/rsgrps/bhurwitz/ajacob/hpc-prodigal/prodigaldbs"
+export PRODIGAL="/rsgrps/bhurwitz/hurwitzlab/bin/prodigal"
+export CDHIT2D="/rsgrps/bhurwitz/hurwitzlab/bin/cdhit/cd-hit-2d"
+export CDHIT="/rsgrps/bhurwitz/hurwitzlab/bin/cdhit/cd-hit"
+export JOBS=100
 
-#
-# Where to find the "raw" DNA reads
-#
-export FASTQ_DIR="/rsgrps/bhurwitz/hurwitzlab/data/raw/delong/HOT_assemblies"
-
-#
-# Where to put the results of our steps
-#
-export FASTA_DIR="$DATA_DIR/fasta"
-export SCREENED_DIR="$DATA_DIR/screened"
-export SUFFIX_DIR="$DATA_DIR/suffix"
-export KMER_DIR="$DATA_DIR/kmer"
-export JELLYFISH_DIR="$DATA_DIR/jellyfish"
-export COUNT_DIR="$DATA_DIR/counts"
-export MODE_DIR="$DATA_DIR/modes"
-export MATRIX_DIR="$DATA_DIR/matrix"
-
-#
-# Some custom functions for our scripts
-#
-# --------------------------------------------------
-function init_dirs {
+function init_dir {
     for dir in $*; do
         if [ -d "$dir" ]; then
             rm -rf $dir/*
@@ -64,9 +25,4 @@ function init_dirs {
             mkdir -p "$dir"
         fi
     done
-}
-
-# --------------------------------------------------
-function lc() {
-    wc -l $1 | cut -d ' ' -f 1
 }
